@@ -1,12 +1,12 @@
-const books = [
+const users = [
   {
-    title: "The Awakening",
-    author: "Kate Chopin",
+    username: "Debbie Ocean",
+    email: "debbie@oceans.com",
   },
   {
-    title: "City of Glass",
-    author: "Paul Auster",
+    username: "Lou Miller",
+    email: "lou@oceans.com",
   },
 ];
 
-module.exports = { books };
+module.exports = { users };
