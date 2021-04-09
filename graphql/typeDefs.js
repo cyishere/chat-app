@@ -7,11 +7,10 @@ module.exports = gql`
     username: String!
     email: String!
     createdAt: String!
-    updatedAt: String!
-    password: String!
-    imageUrl: String
+    token: String
   }
 
+  # This "deleteUserFeedback" type defines what returns when a user is deleted.
   type deleteUserFeedback {
     id: ID!
     message: String
@@ -22,6 +21,7 @@ module.exports = gql`
   # case, the "users" query returns an array of zero or more Users (defined above).
   type Query {
     getUsers: [User]!
+    login(username: String!, password: String!): User!
   }
 
   type Mutation {

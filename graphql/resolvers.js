@@ -1,14 +1,59 @@
 const bcrypt = require("bcrypt");
-const { UserInputError } = require("apollo-server");
+const { UserInputError, AuthenticationError } = require("apollo-server");
+const jwt = require("jsonwebtoken");
+const { APP_SECRET } = require("../utils/config");
 
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves users from the "users" array above.
 module.exports = {
   Query: {
     getUsers: async (_, __, { prisma }) => {
       const users = await prisma.user.findMany();
 
       return users;
+    },
+    login: async (_, args, { prisma }) => {
+      const { username, password } = args;
+      let errors = {};
+
+      try {
+        if (username.trim() === "")
+          errors.username = "Username must not be empty.";
+        if (password === "") errors.password = "Password must not be empty.";
+
+        if (Object.keys(errors).length > 0) {
+          throw new UserInputError("Bad Request", { errors });
+        }
+
+        const user = await prisma.user.findUnique({
+          where: {
+            username,
+          },
+        });
+
+        if (!user) {
+          errors.username = "User not found";
+          throw new UserInputError("Bad Request", { errors });
+        }
+
+        const passwordIsCorrect = await bcrypt.compare(password, user.password);
+
+        if (!passwordIsCorrect) {
+          errors.password = "Password is wrong";
+          throw new AuthenticationError("Password is wrong", { errors });
+        }
+
+        const token = jwt.sign({ username }, APP_SECRET, {
+          expiresIn: 60 * 60,
+        });
+
+        return {
+          ...user,
+          createdAt: user.createdAt.toISOString(),
+          token,
+        };
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     },
   },
 
@@ -22,12 +67,10 @@ module.exports = {
         if (username.trim() === "")
           errors.username = "Username must not be empty.";
         if (email.trim() === "") errors.email = "Email must not be empty.";
-        if (password.trim() === "")
-          errors.password = "Password must not be empty.";
-        if (passconf.trim() !== password.trim())
-          errors.passconf = "Passwords must match.";
+        if (password === "") errors.password = "Password must not be empty.";
+        if (passconf !== password) errors.passconf = "Passwords must match.";
 
-        // TODO check if the right email syntax
+        // check if the right email syntax
         const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
         if (!email.trim().match(regEx))
           errors.email = "Must be a valid email address.";
