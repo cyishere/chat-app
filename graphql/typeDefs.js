@@ -5,12 +5,16 @@ module.exports = gql`
   type User {
     username: String!
     email: String!
+    createdAt: String!
+    updatedAt: String!
+    password: String!
+    imageUrl: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "users" query returns an array of zero or more Users (defined above).
   type Query {
-    users: [User]
+    getUsers: [User]
   }
 `;
