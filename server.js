@@ -9,9 +9,10 @@ const prisma = new PrismaClient();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: {
+  context: (ctx) => ({
+    ctx,
     prisma,
-  },
+  }),
 });
 
 server.listen().then(({ url }) => {

@@ -5,10 +5,30 @@ const { APP_SECRET } = require("../utils/config");
 
 module.exports = {
   Query: {
-    getUsers: async (_, __, { prisma }) => {
-      const users = await prisma.user.findMany();
+    getUsers: async (_, __, { ctx, prisma }) => {
+      try {
+        let user;
 
-      return users;
+        if (!ctx.req || !ctx.req.headers.authorization)
+          throw new AuthenticationError("You need to login.");
+
+        const token = ctx.req.headers.authorization.split(" ")[1];
+        user = jwt.verify(token, APP_SECRET);
+
+        const users = await prisma.user.findMany({
+          where: {
+            username: {
+              not: user.username,
+            },
+          },
+        });
+
+        return users;
+      } catch (err) {
+        console.log(err);
+
+        throw new AuthenticationError(err.message);
+      }
     },
     login: async (_, args, { prisma }) => {
       const { username, password } = args;
