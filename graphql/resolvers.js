@@ -18,7 +18,7 @@ module.exports = {
       let errors = {};
 
       try {
-        // TODO validate input data
+        // validate input data
         if (username.trim() === "")
           errors.username = "Username must not be empty.";
         if (email.trim() === "") errors.email = "Email must not be empty.";
@@ -27,21 +27,10 @@ module.exports = {
         if (passconf.trim() !== password.trim())
           errors.passconf = "Passwords must match.";
 
-        // TODO check if username / email exist
-        const findUserByName = await prisma.user.findUnique({
-          where: {
-            username,
-          },
-        });
-
-        const findUserByEmail = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-        });
-
-        if (findUserByName) errors.username = "This username is already taken.";
-        if (findUserByEmail) errors.email = "This email is already taken.";
+        // TODO check if the right email syntax
+        const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
+        if (!email.trim().match(regEx))
+          errors.email = "Must be a valid email address.";
 
         if (Object.keys(errors).length > 0) {
           throw errors;
@@ -64,7 +53,10 @@ module.exports = {
         return user;
       } catch (err) {
         console.log(err);
-        throw new UserInputError("Bad Request", err);
+        if (err.code === "P2002") {
+          errors[err.meta.target[0]] = `${err.meta.target[0]} is already taken`;
+        }
+        throw new UserInputError("Bad Request", { errors });
       }
     },
     deleteUser: async (_, { id }, { prisma }) => {
