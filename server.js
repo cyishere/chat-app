@@ -1,18 +1,13 @@
 const { ApolloServer } = require("apollo-server");
-const { PrismaClient } = require("@prisma/client");
 
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
-
-const prisma = new PrismaClient();
+const contextMiddleware = require("./utils/contextMiddleware");
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: (ctx) => ({
-    ctx,
-    prisma,
-  }),
+  context: contextMiddleware,
 });
 
 server.listen().then(({ url }) => {
