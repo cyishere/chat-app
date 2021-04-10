@@ -40,7 +40,7 @@ module.exports = {
         if (password === "") errors.password = "Password must not be empty.";
 
         if (Object.keys(errors).length > 0) {
-          throw new UserInputError("Bad Request", { errors });
+          throw errors;
         }
 
         const user = await prisma.user.findUnique({
@@ -51,14 +51,14 @@ module.exports = {
 
         if (!user) {
           errors.username = "User not found";
-          throw new UserInputError("Bad Request", { errors });
+          throw errors;
         }
 
         const passwordIsCorrect = await bcrypt.compare(password, user.password);
 
         if (!passwordIsCorrect) {
           errors.password = "Password is wrong";
-          throw new AuthenticationError("Password is wrong", { errors });
+          throw errors;
         }
 
         const token = jwt.sign({ username }, APP_SECRET, {
@@ -72,7 +72,7 @@ module.exports = {
         };
       } catch (error) {
         console.log(error);
-        throw error;
+        throw new UserInputError("Bad Request", { errors });
       }
     },
   },

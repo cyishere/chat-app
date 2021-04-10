@@ -1,55 +1,47 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormChange } from "../utils/hooks";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 
-const REGISTER_USER = gql`
-  mutation Register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $passconf: String!
-  ) {
-    register(
-      username: $username
-      email: $email
-      password: $password
-      passconf: $passconf
-    ) {
+const LOGIN_USER = gql`
+  query Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
       username
       email
       createdAt
+      token
     }
   }
 `;
 
-const Register = (props) => {
+const Login = (props) => {
   const { values, handleChange } = useFormChange({
     username: "",
-    email: "",
     password: "",
-    passconf: "",
   });
   const [errors, setErrors] = useState({});
 
-  const [registerUser, { loading }] = useMutation(REGISTER_USER, {
-    onCompleted: () => props.history.push("/login"),
+  const [loginUser, { loading }] = useLazyQuery(LOGIN_USER, {
+    onCompleted: (data) => {
+      localStorage.setItem("token", data.login.token);
+      props.history.push("/");
+    },
     onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
   });
 
-  const handleRegisterSubmit = (e) => {
+  const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    registerUser({ variables: values });
+    loginUser({ variables: values });
   };
 
   return (
     <div className="box-border min-h-screen flex flex-col justify-center items-center">
       <section className="container max-w-md mx-auto my-12 p-8 bg-white">
         <h1 className="font-mono text-6xl leading-8 mt-10 mb-12 text-center">
-          Register
+          Login
         </h1>
-        <form className="mx-auto mb-6" onSubmit={handleRegisterSubmit}>
+        <form className="mx-auto mb-6" onSubmit={handleLoginSubmit}>
           <label
             htmlFor="username"
             className={`block text-lg ${errors.username && "text-red-500"}`}
@@ -66,24 +58,6 @@ const Register = (props) => {
             value={values.username}
             onChange={handleChange}
             placeholder="Luke Skywalker"
-          />
-
-          <label
-            htmlFor="email"
-            className={`block text-lg ${errors.email && "text-red-500"}`}
-          >
-            {errors.email ?? "E-mail"}
-          </label>
-          <input
-            type="email"
-            className={`block border border-solid w-full p-2 mb-4 focus:bg-gray-100 ${
-              errors.email ? "border-red-500" : "border-gray-500"
-            }`}
-            id="email"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            placeholder="luke@starwar.com"
           />
 
           <label
@@ -105,35 +79,17 @@ const Register = (props) => {
             placeholder="At least 5 characters"
           />
 
-          <label
-            htmlFor="passconf"
-            className={`block text-lg ${errors.passconf && "text-red-500"}`}
-          >
-            {errors.passconf ?? "Confirm Password"}
-          </label>
-          <input
-            type="password"
-            className={`block border border-solid w-full p-2 mb-4 focus:bg-gray-100 ${
-              errors.passconf ? "border-red-500" : "border-gray-500"
-            }`}
-            id="passconf"
-            name="passconf"
-            value={values.passconf}
-            onChange={handleChange}
-          />
-
           <button
-            type="submit"
-            className="bg-pink-500 border-0 w-full text-white hover:bg-pink-600 py-2 px-4"
+            className="bg-green-500 border-0 w-full text-white hover:bg-green-600 py-2 px-4"
             disabled={loading}
           >
-            {loading ? "Loading..." : "Sign Up"}
+            Login
           </button>
         </form>
         <p className="text-center">
-          Already have an account? Please{" "}
-          <Link to="/login" className="text-green-600">
-            login
+          Haven't had an account? Please{" "}
+          <Link className="text-pink-600" to="/register">
+            register
           </Link>
           .
         </p>
@@ -142,4 +98,4 @@ const Register = (props) => {
   );
 };
 
-export default Register;
+export default Login;
