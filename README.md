@@ -18,7 +18,7 @@ throw new AuthenticationError("Descript the error"); // Without a 2nd parameter
 
 ---
 
-** About Prisma**
+**About Prisma**
 
 ```bash
 npx prisma migrate dev --name "some description"
