@@ -9,7 +9,6 @@ module.exports = (context) => {
   let user;
 
   if (context.req && context.req.headers.authorization) {
-    // throw new AuthenticationError("You need to login.");
     const token = context.req.headers.authorization.split(" ")[1];
     user = jwt.verify(token, APP_SECRET);
   }
