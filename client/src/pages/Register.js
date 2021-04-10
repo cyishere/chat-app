@@ -37,7 +37,7 @@ const Register = (props) => {
     onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
   });
 
-  const handleSubmit = (e) => {
+  const handleRegisterSubmit = (e) => {
     e.preventDefault();
 
     registerUser({ variables: values });
@@ -49,7 +49,7 @@ const Register = (props) => {
         <h1 className="font-mono text-6xl leading-8 mt-10 mb-12 text-center">
           Register
         </h1>
-        <form className="mx-auto mb-6" onSubmit={handleSubmit}>
+        <form className="mx-auto mb-6" onSubmit={handleRegisterSubmit}>
           <label
             htmlFor="username"
             className={`block text-lg ${errors.username && "text-red-500"}`}
