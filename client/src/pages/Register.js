@@ -34,7 +34,7 @@ const Register = (props) => {
 
   const [registerUser, { loading }] = useMutation(REGISTER_USER, {
     onCompleted: () => props.history.push("/login"),
-    onError: (err) => err.graphQLErrors[0].extensions.errors,
+    onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
   });
 
   const handleSubmit = (e) => {
@@ -50,12 +50,17 @@ const Register = (props) => {
           Register
         </h1>
         <form className="mx-auto mb-6" onSubmit={handleSubmit}>
-          <label htmlFor="username" className="block text-lg">
-            Username
+          <label
+            htmlFor="username"
+            className={`block text-lg ${errors.username && "text-red-500"}`}
+          >
+            {errors.username ?? "Username"}
           </label>
           <input
             type="text"
-            className="block border border-solid border-gray-500 w-full p-2 mb-4 focus:bg-gray-100"
+            className={`block border border-solid w-full p-2 mb-4 focus:bg-gray-100 ${
+              errors.username ? "border-red-500" : "border-gray-500"
+            }`}
             id="username"
             name="username"
             value={values.username}
@@ -63,12 +68,17 @@ const Register = (props) => {
             placeholder="Luke Skywalker"
           />
 
-          <label htmlFor="email" className="block text-lg">
-            E-mail
+          <label
+            htmlFor="email"
+            className={`block text-lg ${errors.email && "text-red-500"}`}
+          >
+            {errors.email ?? "E-mail"}
           </label>
           <input
             type="email"
-            className="block border border-solid border-gray-500 w-full p-2 mb-4 focus:bg-gray-100"
+            className={`block border border-solid w-full p-2 mb-4 focus:bg-gray-100 ${
+              errors.email ? "border-red-500" : "border-gray-500"
+            }`}
             id="email"
             name="email"
             value={values.email}
@@ -76,12 +86,17 @@ const Register = (props) => {
             placeholder="luke@starwar.com"
           />
 
-          <label htmlFor="password" className="block text-lg">
-            Password
+          <label
+            htmlFor="password"
+            className={`block text-lg ${errors.password && "text-red-500"}`}
+          >
+            {errors.password ?? "Password"}
           </label>
           <input
             type="password"
-            className="block border border-solid border-gray-500 w-full p-2 mb-4 focus:bg-gray-100"
+            className={`block border border-solid w-full p-2 mb-4 focus:bg-gray-100 ${
+              errors.password ? "border-red-500" : "border-gray-500"
+            }`}
             id="password"
             name="password"
             min="5"
@@ -90,12 +105,17 @@ const Register = (props) => {
             placeholder="At least 5 characters"
           />
 
-          <label htmlFor="passconf" className="block text-lg">
-            Confirm Password
+          <label
+            htmlFor="passconf"
+            className={`block text-lg ${errors.passconf && "text-red-500"}`}
+          >
+            {errors.passconf ?? "Confirm Password"}
           </label>
           <input
-            type="passconf"
-            className="block border border-solid border-gray-500 w-full p-2 mb-4 focus:bg-gray-100"
+            type="password"
+            className={`block border border-solid w-full p-2 mb-4 focus:bg-gray-100 ${
+              errors.passconf ? "border-red-500" : "border-gray-500"
+            }`}
             id="passconf"
             name="passconf"
             value={values.passconf}
