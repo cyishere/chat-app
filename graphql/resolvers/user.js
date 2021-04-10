@@ -1,19 +1,13 @@
 const bcrypt = require("bcrypt");
 const { UserInputError, AuthenticationError } = require("apollo-server");
 const jwt = require("jsonwebtoken");
-const { APP_SECRET } = require("../utils/config");
+const { APP_SECRET } = require("../../utils/config");
 
 module.exports = {
   Query: {
-    getUsers: async (_, __, { ctx, prisma }) => {
+    getUsers: async (_, __, { user, prisma }) => {
       try {
-        let user;
-
-        if (!ctx.req || !ctx.req.headers.authorization)
-          throw new AuthenticationError("You need to login.");
-
-        const token = ctx.req.headers.authorization.split(" ")[1];
-        user = jwt.verify(token, APP_SECRET);
+        if (!user) throw new AuthenticationError("You need to login.");
 
         const users = await prisma.user.findMany({
           where: {
