@@ -1,6 +1,36 @@
 const { UserInputError, AuthenticationError } = require("apollo-server");
 
 module.exports = {
+  Query: {
+    getMessages: async (_, { from }, { user, prisma }) => {
+      try {
+        if (!user) throw new AuthenticationError("You need to login.");
+
+        const otherUser = await prisma.user.findUnique({
+          where: { username: from },
+        });
+
+        if (!otherUser) throw new UserInputError("User not found.");
+
+        const usernames = [user.username, from];
+
+        const messages = await prisma.message.findMany({
+          where: {
+            from: { in: usernames },
+            to: { in: usernames },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
+        return messages;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+  },
   Mutation: {
     sendMessage: async (_, { to, content }, { user, prisma }) => {
       try {
