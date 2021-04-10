@@ -22,6 +22,7 @@ module.exports = gql`
     content: String!
     to: String!
     from: String!
+    createdAt: String!
   }
 
   # The "Query" type is special: it lists all of the available queries that
