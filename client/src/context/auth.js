@@ -1,5 +1,25 @@
 import { createContext, useReducer, useContext } from "react";
+import jwtDecode from "jwt-decode";
 
+/**
+ * @feature Check if the local token is available
+ */
+let user = null;
+const token = localStorage.getItem("token");
+if (token) {
+  const decodedToken = jwtDecode(token);
+  const expiresAt = new Date(decodedToken.exp * 1000);
+
+  if (new Date() > expiresAt) {
+    localStorage.removeItem("token");
+  } else {
+    user = decodedToken;
+  }
+} else console.log("Token not found.");
+
+/**
+ * @feature Auth Context
+ */
 const AuthStateContext = createContext();
 const AuthDispatchContext = createContext();
 
@@ -19,7 +39,7 @@ const authReducer = (state, action) => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, { user: null });
+  const [state, dispatch] = useReducer(authReducer, { user });
 
   return (
     <AuthDispatchContext.Provider value={dispatch}>

@@ -1,7 +1,8 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import ApolloProvider from "./ApolloProvider";
 import { AuthProvider } from "./context/auth";
 
+import DynamicRoute from "./utils/DynamicRoute";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -13,9 +14,9 @@ function App() {
       <AuthProvider>
         <Router>
           <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/register" component={Register} />
-            <Route path="/login" component={Login} />
+            <DynamicRoute exact path="/" component={Home} authenticated />
+            <DynamicRoute path="/register" component={Register} guest />
+            <DynamicRoute path="/login" component={Login} guest />
           </Switch>
         </Router>
       </AuthProvider>
