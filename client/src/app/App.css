@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-indigo-700;
+}
+
+.chat-window {
+  flex-direction: column;
+  justify-content: space-between;
+}
+.chat-sidebar-footer {
+  justify-content: space-evenly;
+  align-items: center;
+}

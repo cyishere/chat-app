@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 import ApolloProvider from "./ApolloProvider";
-import { AuthProvider } from "./context/auth";
+import { AuthProvider } from "../context/auth";
 
-import DynamicRoute from "./utils/DynamicRoute";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import DynamicRoute from "../utils/DynamicRoute";
+import Home from "../pages/Home";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
 import "./App.css";
 
 function App() {
