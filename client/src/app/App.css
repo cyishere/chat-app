@@ -4,13 +4,10 @@
 
 body {
   @apply bg-indigo-700;
+  @apply text-gray-700;
 }
 
 .chat-window {
   flex-direction: column;
   justify-content: space-between;
-}
-.chat-sidebar-footer {
-  justify-content: space-evenly;
-  align-items: center;
 }
