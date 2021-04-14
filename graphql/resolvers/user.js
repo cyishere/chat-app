@@ -9,7 +9,7 @@ module.exports = {
       try {
         if (!user) throw new AuthenticationError("You need to login.");
 
-        const users = await prisma.user.findMany({
+        let users = await prisma.user.findMany({
           where: {
             username: {
               not: user.username,
@@ -20,6 +20,23 @@ module.exports = {
             createdAt: true,
             imageUrl: true,
           },
+        });
+
+        const messages = await prisma.message.findMany({
+          where: {
+            OR: [{ from: user.username }, { to: user.username }],
+          },
+        });
+
+        users = users.map((thisUser) => {
+          const latestMessage = messages.find(
+            (msg) => msg.from === user.username || msg.to === user.username
+          );
+
+          return {
+            ...thisUser,
+            latestMessage,
+          };
         });
 
         return users;
