@@ -15,6 +15,11 @@ module.exports = {
               not: user.username,
             },
           },
+          select: {
+            username: true,
+            createdAt: true,
+            imageUrl: true,
+          },
         });
 
         return users;

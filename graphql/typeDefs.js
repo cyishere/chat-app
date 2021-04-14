@@ -5,9 +5,10 @@ module.exports = gql`
   type User {
     id: ID!
     username: String!
-    email: String!
     createdAt: String!
     token: String
+    imageUrl: String!
+    latestMessage: Message
   }
 
   # This "deleteUserFeedback" type defines what returns when a user is deleted.
