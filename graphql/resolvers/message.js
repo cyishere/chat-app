@@ -20,7 +20,7 @@ module.exports = {
             to: { in: usernames },
           },
           orderBy: {
-            createdAt: "desc",
+            createdAt: "asc",
           },
         });
 

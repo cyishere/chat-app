@@ -9,12 +9,38 @@ module.exports = {
       try {
         if (!user) throw new AuthenticationError("You need to login.");
 
-        const users = await prisma.user.findMany({
+        let users = await prisma.user.findMany({
           where: {
             username: {
               not: user.username,
             },
           },
+          select: {
+            username: true,
+            createdAt: true,
+            imageUrl: true,
+          },
+        });
+
+        const messages = await prisma.message.findMany({
+          where: {
+            OR: [{ from: user.username }, { to: user.username }],
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
+        users = users.map((thisUser) => {
+          const latestMessage = messages.find(
+            (msg) =>
+              msg.from === thisUser.username || msg.to === thisUser.username
+          );
+
+          return {
+            ...thisUser,
+            latestMessage,
+          };
         });
 
         return users;
@@ -55,13 +81,16 @@ module.exports = {
           throw errors;
         }
 
-        const token = jwt.sign({ username }, APP_SECRET, {
-          expiresIn: 60 * 60,
-        });
+        const token = jwt.sign(
+          { username, imageUrl: user.imageUrl },
+          APP_SECRET,
+          {
+            expiresIn: 60 * 60,
+          }
+        );
 
         return {
           ...user,
-          createdAt: user.createdAt.toISOString(),
           token,
         };
       } catch (error) {
