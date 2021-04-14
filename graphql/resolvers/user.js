@@ -26,11 +26,15 @@ module.exports = {
           where: {
             OR: [{ from: user.username }, { to: user.username }],
           },
+          orderBy: {
+            createdAt: "desc",
+          },
         });
 
         users = users.map((thisUser) => {
           const latestMessage = messages.find(
-            (msg) => msg.from === user.username || msg.to === user.username
+            (msg) =>
+              msg.from === thisUser.username || msg.to === thisUser.username
           );
 
           return {
@@ -77,13 +81,16 @@ module.exports = {
           throw errors;
         }
 
-        const token = jwt.sign({ username }, APP_SECRET, {
-          expiresIn: 60 * 60,
-        });
+        const token = jwt.sign(
+          { username, imageUrl: user.imageUrl },
+          APP_SECRET,
+          {
+            expiresIn: 60 * 60,
+          }
+        );
 
         return {
           ...user,
-          createdAt: user.createdAt.toISOString(),
           token,
         };
       } catch (error) {

@@ -1,5 +1,5 @@
 import { useAuthState, useAuthDispatch } from "../../context/auth";
-import Avatar from "./Avatar";
+import Avatar from "../Avatar";
 
 const Footer = (props) => {
   const { user } = useAuthState();
@@ -14,10 +14,7 @@ const Footer = (props) => {
   return (
     <div className="flex justify-between bg-gray-200 p-4 rounded-md">
       <div className="flex space-x-4 items-center">
-        <Avatar
-          imageUrl="https://pbs.twimg.com/profile_images/1380714602996985857/CUN8xqah_400x400.jpg"
-          user={user}
-        />
+        <Avatar imageUrl={user.imageUrl} username={user.username} />
         <span>{user.username}</span>
       </div>
       <button

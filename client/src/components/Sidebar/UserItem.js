@@ -1,13 +1,24 @@
-import Avatar from "./Avatar";
+import Avatar from "../Avatar";
 
-const UserItem = ({ user }) => {
+const UserItem = ({ user, seletedUser, setSelectedUser }) => {
+  const activeClassNames =
+    seletedUser?.username && seletedUser.username === user.username
+      ? "bg-indigo-100"
+      : "";
+
   return (
-    <li className="list-none flex space-x-4 items-center rounded p-4 cursor-pointer hover:bg-gray-100">
-      <Avatar
-        user={user}
-        imageUrl="https://pbs.twimg.com/profile_images/1354749722422960128/yoHy3kAI_400x400.jpg"
-      />
-      <span>{user.username}</span>
+    <li
+      className={`list-none flex space-x-4 items-center rounded p-4 cursor-pointer hover:bg-gray-100 ${activeClassNames}`}
+      onClick={() => setSelectedUser(user)}
+    >
+      <Avatar username={user.username} imageUrl={user.imageUrl} />
+      <div>
+        <h3 className="font-medium">{user.username}</h3>
+        <p className="text-gray-400">{`${user.latestMessage.content.slice(
+          0,
+          19
+        )}...`}</p>
+      </div>
     </li>
   );
 };

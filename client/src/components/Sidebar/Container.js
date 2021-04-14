@@ -1,10 +1,10 @@
 import UserList from "./UserList";
 import Footer from "./Footer";
 
-const Container = ({ children }) => {
+const Container = ({ selectedUser, setSelectedUser }) => {
   return (
     <aside className="p-4 flex chat-window">
-      <UserList />
+      <UserList selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
       <Footer />
     </aside>
   );

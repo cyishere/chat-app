@@ -5,30 +5,50 @@ const GET_USERS = gql`
   query GetUsers {
     getUsers {
       username
+      createdAt
+      imageUrl
+      latestMessage {
+        id
+        content
+        from
+        to
+        createdAt
+      }
     }
   }
 `;
 
-const UserList = () => {
-  const { loading, error, data } = useQuery(GET_USERS);
+const UserList = ({ selectedUser, setSelectedUser }) => {
+  const {
+    loading: usersLoading,
+    data: usersData,
+    error: usersError,
+  } = useQuery(GET_USERS);
 
-  if (error) console.log(error);
+  let usersMarkup;
 
-  if (data) console.log(data);
-
-  if (!data || loading) {
-    return <p>Loading...</p>;
-  } else if (data.getUsers.length === 0) {
-    return <p>No users join yet.</p>;
-  } else if (data.getUsers.length > 0) {
-    return (
+  if (usersError) {
+    usersMarkup = <p>usersError.message</p>;
+  } else if (!usersData || usersLoading) {
+    usersMarkup = <p>Loading...</p>;
+  } else if (usersData.getUsers.length === 0) {
+    usersMarkup = <p>No users join yet.</p>;
+  } else if (usersData.getUsers.length > 0) {
+    usersMarkup = (
       <ul>
-        {data.getUsers.map((user) => (
-          <UserItem key={user.username} user={user} />
+        {usersData.getUsers.map((user) => (
+          <UserItem
+            key={user.username}
+            user={user}
+            seletedUser={selectedUser}
+            setSelectedUser={setSelectedUser}
+          />
         ))}
       </ul>
     );
   }
+
+  return usersMarkup;
 };
 
 export default UserList;
