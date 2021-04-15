@@ -18,7 +18,7 @@ const Footer = () => {
         <span>{user.username}</span>
       </div>
       <button
-        className="bg-blue-500 py-2 px-6 text-white hover:bg-blue-700"
+        className="bg-blue-500 py-2 px-6 text-white rounded hover:bg-blue-700"
         type="button"
         onClick={handleLogout}
       >
