@@ -1,3 +1,4 @@
+import * as timeago from "timeago.js";
 import Avatar from "../Avatar";
 
 const MessageItem = ({ selectedUser, user, message }) => {
@@ -6,9 +7,15 @@ const MessageItem = ({ selectedUser, user, message }) => {
   if (selectedUser?.username && selectedUser.username === message.to) {
     markup = (
       <li className="list-none flex justify-end space-x-4 mb-8">
-        <article className="bg-indigo-600 text-white p-4 rounded-md shadow">
-          {message.content}
-        </article>
+        <section>
+          <article className="bg-indigo-600 text-white p-4 rounded-md shadow mb-1.5">
+            {message.content}
+          </article>
+          <p className="text-gray-400 text-sm text-right">
+            {timeago.format(message.createdAt)}
+          </p>
+        </section>
+
         <Avatar imageUrl={user.imageUrl} username={user.username} />
       </li>
     );
@@ -16,9 +23,14 @@ const MessageItem = ({ selectedUser, user, message }) => {
     markup = (
       <li className="list-none flex space-x-4 mb-8">
         <Avatar username={message.from} imageUrl={selectedUser.imageUrl} />
-        <article className="bg-white p-4 rounded-md shadow">
-          {message.content}
-        </article>
+        <section>
+          <article className="bg-white p-4 rounded-md shadow mb-1.5">
+            {message.content}
+          </article>
+          <p className="text-gray-400 text-sm">
+            {timeago.format(message.createdAt)}
+          </p>
+        </section>
       </li>
     );
   }
