@@ -1,14 +1,14 @@
 import { useAuthState, useAuthDispatch } from "../../context/auth";
 import Avatar from "../Avatar";
 
-const Footer = (props) => {
+const Footer = () => {
   const { user } = useAuthState();
 
   const dispatch = useAuthDispatch();
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
-    props.history.push("/login");
+    window.location.href = "/login";
   };
 
   return (
