@@ -73,7 +73,7 @@ const Window = ({ selectedUser }) => {
     <main className="col-span-3 bg-gray-200 p-4 flex flex-col justify-between">
       {markup}
 
-      <InputBox />
+      <InputBox selectedUser={selectedUser} />
     </main>
   );
 };

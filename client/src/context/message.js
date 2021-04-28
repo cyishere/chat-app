@@ -16,6 +16,25 @@ const messageReducer = (state, action) => {
       const messages = action.payload;
       return { ...state, messages };
 
+    case "ADD_MESSAGE":
+      const { username, message } = action.payload;
+      const usersWithTheOneHasNewMsg = state.users.map((user) => {
+        if (user.username === username) {
+          return {
+            ...user,
+            latestMessage: message,
+          };
+        } else {
+          return user;
+        }
+      });
+
+      return {
+        ...state,
+        user: usersWithTheOneHasNewMsg,
+        messages: [...state.messages, message],
+      };
+
     default:
       throw new Error(`Unknow action type: ${action.type}`);
   }
