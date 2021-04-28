@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { useMessageDispatch, useMessageState } from "../../context/message";
 import UserItem from "./UserItem";
 
 const GET_USERS = gql`
@@ -19,24 +20,27 @@ const GET_USERS = gql`
 `;
 
 const UserList = ({ selectedUser, setSelectedUser }) => {
-  const {
-    loading: usersLoading,
-    data: usersData,
-    error: usersError,
-  } = useQuery(GET_USERS);
+  const { users } = useMessageState();
+  const dispatch = useMessageDispatch();
+
+  const { loading: usersLoading, error: usersError } = useQuery(GET_USERS, {
+    onCompleted: (data) => {
+      dispatch({ type: "SET_USERS", payload: data.getUsers });
+    },
+  });
 
   let usersMarkup;
 
   if (usersError) {
     usersMarkup = <p>usersError.message</p>;
-  } else if (!usersData || usersLoading) {
+  } else if (!users || usersLoading) {
     usersMarkup = <p>Loading...</p>;
-  } else if (usersData.getUsers.length === 0) {
+  } else if (users.length === 0) {
     usersMarkup = <p>No users join yet.</p>;
-  } else if (usersData.getUsers.length > 0) {
+  } else if (users.length > 0) {
     usersMarkup = (
       <ul>
-        {usersData.getUsers.map((user) => (
+        {users.map((user) => (
           <UserItem
             key={user.username}
             user={user}
