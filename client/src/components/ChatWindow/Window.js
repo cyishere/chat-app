@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { gql, useLazyQuery } from "@apollo/client";
 import { useAuthState } from "../../context/auth";
+import { useMessageDispatch, useMessageState } from "../../context/message";
 import MessageItem from "./MessageItem";
 import InputBox from "./InputBox";
 
@@ -23,11 +24,23 @@ const Window = ({ selectedUser }) => {
     { loading: messagesLoading, data: messagesData, error: messagesError },
   ] = useLazyQuery(GET_MESSAGES);
 
+  const dispatch = useMessageDispatch();
+  const { messages } = useMessageState();
+
   useEffect(() => {
     if (selectedUser) {
       getMessages({ variables: { from: selectedUser.username } });
     }
   }, [getMessages, selectedUser]);
+
+  useEffect(() => {
+    if (messagesData) {
+      dispatch({
+        type: "SET_USER_MESSAGES",
+        payload: messagesData.getMessages,
+      });
+    }
+  }, [dispatch, messagesData, selectedUser]);
 
   let markup;
 
@@ -39,12 +52,12 @@ const Window = ({ selectedUser }) => {
     markup = (
       <p className="text-center">Please select a friend to see the messages.</p>
     );
-  } else if (messagesData.getMessages.length === 0) {
+  } else if (messages?.length === 0) {
     markup = <p className="text-center">You haven't talked yet.</p>;
-  } else if (messagesData.getMessages) {
+  } else if (messages) {
     markup = (
       <ul>
-        {messagesData.getMessages.map((message) => (
+        {messages.map((message) => (
           <MessageItem
             key={message.id}
             message={message}
@@ -54,10 +67,6 @@ const Window = ({ selectedUser }) => {
         ))}
       </ul>
     );
-  }
-
-  if (messagesData?.getMessages) {
-    console.log("messages:", messagesData.getMessages);
   }
 
   return (

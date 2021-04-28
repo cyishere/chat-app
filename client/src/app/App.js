@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 import ApolloProvider from "./ApolloProvider";
 import { AuthProvider } from "../context/auth";
+import { MessageProvider } from "../context/message";
 
 import DynamicRoute from "../utils/DynamicRoute";
 import Home from "../pages/Home";
@@ -12,13 +13,15 @@ function App() {
   return (
     <ApolloProvider>
       <AuthProvider>
-        <Router>
-          <Switch>
-            <DynamicRoute exact path="/" component={Home} authenticated />
-            <DynamicRoute path="/register" component={Register} guest />
-            <DynamicRoute path="/login" component={Login} guest />
-          </Switch>
-        </Router>
+        <MessageProvider>
+          <Router>
+            <Switch>
+              <DynamicRoute exact path="/" component={Home} authenticated />
+              <DynamicRoute path="/register" component={Register} guest />
+              <DynamicRoute path="/login" component={Login} guest />
+            </Switch>
+          </Router>
+        </MessageProvider>
       </AuthProvider>
     </ApolloProvider>
   );
