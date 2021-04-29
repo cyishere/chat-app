@@ -17,7 +17,6 @@ const REGISTER_USER = gql`
       passconf: $passconf
     ) {
       username
-      email
       createdAt
     }
   }

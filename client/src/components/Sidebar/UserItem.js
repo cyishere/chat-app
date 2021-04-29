@@ -14,10 +14,12 @@ const UserItem = ({ user, seletedUser, setSelectedUser }) => {
       <Avatar username={user.username} imageUrl={user.imageUrl} />
       <div>
         <h3 className="font-medium">{user.username}</h3>
-        <p className="text-gray-400">{`${user.latestMessage.content.slice(
-          0,
-          19
-        )}...`}</p>
+        {user.latestMessage && (
+          <p className="text-gray-400">{`${user.latestMessage?.content.slice(
+            0,
+            19
+          )}...`}</p>
+        )}
       </div>
     </li>
   );
