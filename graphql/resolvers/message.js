@@ -1,4 +1,10 @@
-const { UserInputError, AuthenticationError } = require("apollo-server");
+const {
+  UserInputError,
+  AuthenticationError,
+  PubSub,
+} = require("apollo-server");
+
+const pubsub = new PubSub();
 
 module.exports = {
   Query: {
@@ -59,11 +65,20 @@ module.exports = {
           },
         });
 
+        pubsub.publish("NEW_MESSAGE", {
+          newMessage: message,
+        });
+
         return message;
       } catch (error) {
         console.log(error);
         throw error;
       }
+    },
+  },
+  Subscription: {
+    newMessage: {
+      subscribe: () => pubsub.asyncIterator(["NEW_MESSAGE"]),
     },
   },
 };
