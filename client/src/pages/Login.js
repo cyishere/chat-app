@@ -15,7 +15,7 @@ const LOGIN_USER = gql`
   }
 `;
 
-const Login = (props) => {
+const Login = () => {
   const { values, handleChange } = useFormChange({
     username: "",
     password: "",
@@ -27,7 +27,7 @@ const Login = (props) => {
   const [loginUser, { loading }] = useLazyQuery(LOGIN_USER, {
     onCompleted: (data) => {
       dispatch({ type: "LOGIN", payload: data.login });
-      props.history.push("/");
+      window.location.href = "/";
     },
     onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
   });
@@ -90,7 +90,7 @@ const Login = (props) => {
           </button>
         </form>
         <p className="text-center">
-          Haven't had an account? Please{" "}
+          Haven&#39;t had an account? Please{" "}
           <Link className="text-pink-600" to="/register">
             register
           </Link>

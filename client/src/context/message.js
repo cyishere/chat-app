@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import { createContext, useReducer, useContext } from "react";
 
 /**
@@ -31,7 +32,7 @@ const messageReducer = (state, action) => {
 
       return {
         ...state,
-        user: usersWithTheOneHasNewMsg,
+        users: usersWithTheOneHasNewMsg,
         messages: [...state.messages, message],
       };
 

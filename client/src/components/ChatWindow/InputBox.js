@@ -1,5 +1,5 @@
-import React from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useEffect } from "react";
+import { gql, useMutation, useSubscription } from "@apollo/client";
 import { useMessageDispatch } from "../../context/message";
 import { useFormChange } from "../../utils/hooks";
 
@@ -15,24 +15,49 @@ const SEND_MESSAGE = gql`
   }
 `;
 
-const InputBox = ({ selectedUser }) => {
+const NEW_MESSAGE = gql`
+  subscription NewMessage {
+    newMessage {
+      id
+      content
+      to
+      from
+      createdAt
+    }
+  }
+`;
+
+const InputBox = ({ selectedUser, user }) => {
   const { values, handleChange, resetValues } = useFormChange({
     content: "",
   });
   const dispatch = useMessageDispatch();
   const [sendMessage, { loading, error }] = useMutation(SEND_MESSAGE, {
-    onCompleted: (data) => {
-      dispatch({
-        type: "ADD_MESSAGE",
-        payload: { username: selectedUser.username, message: data.sendMessage },
-      });
+    onCompleted: () => {
       resetValues();
     },
   });
+  const { error: newMessageError, data: newMessageData } =
+    useSubscription(NEW_MESSAGE);
 
   if (error) {
     alert(error);
   }
+
+  useEffect(() => {
+    if (newMessageError) console.log("newMessageError:", newMessageError);
+
+    if (newMessageData) {
+      const message = newMessageData.newMessage;
+      dispatch({
+        type: "ADD_MESSAGE",
+        payload: {
+          username: user.username === message.from ? message.from : message.to,
+          message,
+        },
+      });
+    }
+  }, [newMessageData, newMessageError]);
 
   const submitNewMessage = (e) => {
     e.preventDefault();
