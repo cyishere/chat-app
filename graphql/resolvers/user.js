@@ -135,7 +135,6 @@ module.exports = {
           },
         });
 
-        // return user
         return user;
       } catch (err) {
         console.log(err);

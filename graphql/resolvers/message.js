@@ -1,4 +1,8 @@
-const { UserInputError, AuthenticationError } = require("apollo-server");
+const {
+  UserInputError,
+  AuthenticationError,
+  withFilter,
+} = require("apollo-server");
 
 module.exports = {
   Query: {
@@ -32,7 +36,7 @@ module.exports = {
     },
   },
   Mutation: {
-    sendMessage: async (_, { to, content }, { user, prisma }) => {
+    sendMessage: async (_, { to, content }, { user, prisma, pubsub }) => {
       try {
         if (!user) throw new AuthenticationError("You need to login.");
 
@@ -59,11 +63,35 @@ module.exports = {
           },
         });
 
+        pubsub.publish("NEW_MESSAGE", {
+          newMessage: message,
+        });
+
         return message;
       } catch (error) {
         console.log(error);
         throw error;
       }
+    },
+  },
+  Subscription: {
+    newMessage: {
+      subscribe: withFilter(
+        (_, __, { pubsub, user }) => {
+          if (!user) throw new AuthenticationError("Unauthenticated");
+          return pubsub.asyncIterator(["NEW_MESSAGE"]);
+        },
+        ({ newMessage }, _, { user }) => {
+          if (
+            newMessage.from === user.username ||
+            newMessage.to === user.username
+          ) {
+            return true;
+          }
+
+          return false;
+        }
+      ),
     },
   },
 };

@@ -53,7 +53,7 @@ const Window = ({ selectedUser }) => {
       <p className="text-center">Please select a friend to see the messages.</p>
     );
   } else if (messages?.length === 0) {
-    markup = <p className="text-center">You haven't talked yet.</p>;
+    markup = <p className="text-center">You haven&#39;t talked yet.</p>;
   } else if (messages) {
     markup = (
       <ul>
@@ -73,7 +73,7 @@ const Window = ({ selectedUser }) => {
     <main className="col-span-3 bg-gray-200 p-4 flex flex-col justify-between">
       {markup}
 
-      <InputBox selectedUser={selectedUser} />
+      <InputBox selectedUser={selectedUser} user={user} />
     </main>
   );
 };

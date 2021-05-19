@@ -7,7 +7,7 @@ module.exports = gql`
     username: String!
     createdAt: String!
     token: String
-    imageUrl: String!
+    imageUrl: String
     latestMessage: Message
   }
 
@@ -46,5 +46,9 @@ module.exports = gql`
     deleteUser(id: ID!): deleteUserFeedback!
 
     sendMessage(to: String!, content: String!): Message!
+  }
+
+  type Subscription {
+    newMessage: Message!
   }
 `;
