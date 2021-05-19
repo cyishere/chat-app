@@ -8,7 +8,7 @@ const MessageStateContext = createContext();
 const MessageDispatchContext = createContext();
 
 // state - { users, messages }
-const messageReducer = (state, action) => {
+const messageReducer = (state = { users: [], messages: [] }, action) => {
   switch (action.type) {
     case "SET_USERS":
       return { ...state, users: action.payload };

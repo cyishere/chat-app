@@ -79,7 +79,7 @@ module.exports = {
       subscribe: withFilter(
         (_, __, { pubsub, user }) => {
           if (!user) throw new AuthenticationError("Unauthenticated");
-          return pubsub.asyncIterator(["NEW_MESSAGE"]);
+          return pubsub.asyncIterator("NEW_MESSAGE");
         },
         ({ newMessage }, _, { user }) => {
           if (
