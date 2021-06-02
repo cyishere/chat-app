@@ -1,25 +1,82 @@
-A chat app.
+# Chat App
 
-## Stack
+This is a little app to demonstrate the subscription of GraphQL.
 
-GraphQL, Apollo Server, Prisma.
+## More Information
 
----
+[Project introduction on my website](https://cyishere.dev/portfolio/chat-app)
 
-**About Apollo Server**:
+## Teck Stack
 
-```js
-throw new UserInputError("Descript the error", {* with a custom 2nd parameter *});
+**Backend:**
 
-// BUT
+- Apollo Server / GraphQL
+- Prisma
+- PostgreSQL
 
-throw new AuthenticationError("Descript the error"); // Without a 2nd parameter
-```
+**Frontend:**
 
----
+- React
+- Apollo Client
+- TailwindCSS
 
-**About Prisma**
+## Features
+
+- User register / login / logout.
+- Make conversation with other users.
+- Receive messages in real-time.
+
+## Lessons Learned
+
+I've learned these four major features below by making this project, please read [my article](https://cyishere.dev/portfolio/digikit) for more details about these.
+
+- Error handling
+- Logic of auth
+- Logic of Shopping Cart (with Redux)
+- Protection of routes
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`DATABASE_URL` - The url of your PostgreSQL.
+
+`APP_SECRET` - The app's secret for jwt token.
+
+## Run Locally
+
+Clone the project
 
 ```bash
-npx prisma migrate dev --name "some description"
+  git clone https://github.com/cyishere/chat-app
 ```
+
+Go to the project directory
+
+```bash
+  cd chat-app
+```
+
+Install dependencies
+
+```bash
+  yarn install
+
+  cd client
+  yarn install
+```
+
+Start the server
+
+```bash
+  yarn dev
+
+  cd client
+  yarn start
+```
+
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+Create this file on [readme.so](https://readme.so/).
