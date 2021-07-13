@@ -3,3 +3,4 @@ node_modules/
 prisma/script.js
 prisma/migrations/
 tables/
+yarn.lock
